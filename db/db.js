@@ -3,18 +3,17 @@ import colors from "colors";
 import dotenv from "dotenv";
 
 dotenv.config();
+const sequelize = new Sequelize(
+  process.env.DBNAME,
+  process.env.USERNAME,
+  process.env.PASSWORD,
+  {
+    dialect: "postgres",
+    host: "localhost",
+  }
+);
 
 export const connectDB = async () => {
-    const sequelize = new Sequelize(
-      process.env.DBNAME,
-      process.env.USERNAME,
-      process.env.PASSWORD,
-      {
-        dialect: "postgres",
-        host: "localhost",
-      }
-    );
-
     try {
       await sequelize.authenticate();
       console.log("Connection has been established successfully.".cyan.bold);
