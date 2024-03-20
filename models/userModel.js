@@ -1,4 +1,5 @@
 import { sequelize, DataTypes } from 'sequelize';
+import Otp from './otpModel.js';
 
 const User = sequelize.define("User", {
   // Define your user schema here
@@ -9,11 +10,11 @@ const User = sequelize.define("User", {
   },
   firstName: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   lastName: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -22,12 +23,12 @@ const User = sequelize.define("User", {
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
   gender: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   role: {
     type: DataTypes.ENUM("user", "admin", "superadmin"),
@@ -40,7 +41,7 @@ const User = sequelize.define("User", {
   },
   postalcode: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   getemail: {
     type: DataTypes.BOOLEAN,
@@ -51,5 +52,7 @@ const User = sequelize.define("User", {
     default: false,
   },
 });
+
+User.hasMany(Otp);
 
 export default User;
