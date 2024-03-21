@@ -10,14 +10,6 @@ dotenv.config;
 export const app = express();
 connectDB();
 
-// Relation between Schemas
-User.hasMany(Otp);
-User.hasMany(Address);
-
-Otp.belongsTo(User);
-
-Address.belongsTo(User);
-
 // middleware
 app.use(express.json());
 
