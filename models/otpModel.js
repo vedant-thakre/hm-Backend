@@ -31,9 +31,3 @@ const Otp = sequelize.define(
 
 
 export default Otp;
-
-export const associate = (models) => {
-  const { User } = models;
-  Otp.belongsTo(User);
-  User.hasMany(Otp, { as: "otps" });
-};

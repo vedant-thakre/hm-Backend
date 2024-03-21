@@ -35,7 +35,7 @@ const User = sequelize.define(
       allowNull: true,
     },
     role: {
-      type: DataTypes.ENUM("user", "admin", "superadmin"),
+      type: DataTypes.ENUM("user", "admin"),
       allowNull: false,
       defaultValue: "user",
     },
@@ -65,12 +65,3 @@ const User = sequelize.define(
 
 export default User;
 
-export const associate = (models) => {
-  const { Otp } = models;
-  User.hasMany(Otp, { as: "otps" });
-  Otp.belongsTo(User);
-
-  const { Address } = models;
-  User.hasMany(Address, { as: "otps" });
-  Address.belongsTo(User);
-};
