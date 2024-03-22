@@ -29,7 +29,9 @@ export const registerUser = async (req, res) => {
     
     const verificationToken = generateSecureToken(email);
 
-    await sendVerificationEmail(email, verificationToken, res);
+    console.log(verificationToken);
+
+    await sendVerificationEmail(email, verificationToken);
 
     console.log(newUser);
 

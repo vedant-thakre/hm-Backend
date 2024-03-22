@@ -52,9 +52,9 @@ const User = sequelize.define(
       defaultValue: false,
     },
     dob: {
-      type: Sequelize.DATEONLY,
+      type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: Sequelize.fn("now"),
+      defaultValue: DataTypes.NOW,
     },
     isVerified: {
       type: DataTypes.BOOLEAN,

@@ -17,39 +17,53 @@ const transporter = nodemailer.createTransport({
 });
 
 export const generateSecureToken = (email) => {
-  const token = jwt.sign(email, process.env.VERIFICATION_SECRET, {
-    expiresIn: "1d",
-  });
+  const token = jwt.sign(
+    { email },
+    "LeoMessiIsTheGreatestPlayerOfAllTimePeriod",
+    {
+      expiresIn: "1d",
+    }
+  );
   return token;  
 };
 
-export const veriftySecurityToken = async (req, res) => {
+export const verifySecurityToken = async (req, res) => {
   try {
     const { token } = req.params;
 
-    const decodedmail = jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
+    const decodedmail = jwt.verify(
+      token,
+      "LeoMessiIsTheGreatestPlayerOfAllTimePeriod"
+    );
 
-    const findUser = User.findOne({ where: { email: decodedmail } });
+    console.log("decodedmail", decodedmail);
 
-    if(!findUser){
-      res.status(400).json({
-        message: "Verification link has been expired",
+    const findUser = await User.findOne({
+      where: { email: decodedmail.email },
+    });
+
+    if (!findUser) {
+      return res.status(400).json({
+        message: "Verification link has expired or is invalid",
       });
     }
 
+    // Update isVerified property and save the user
     findUser.isVerified = true;
     await findUser.save();
 
-    res.status(400).json({
-      message: "Verification Successfull",
+    console.log("Verification Successful");
+    res.status(200).json({
+      message: "Verification successful",
     });
-
   } catch (error) {
+    console.log(error);
     res.status(500).json({
-      error: error,
+      message: "Internal server error",
     });
   }
 };
+
 
 export const sendVerificationEmail = async(email, token) => {
     try {
@@ -133,13 +147,9 @@ export const sendVerificationEmail = async(email, token) => {
                   </html>
           `,
       });
-      res.status(200).json({ 
-        message: "Verification mail has been sent" 
-      });
+      console.log("verificatioin email has been sent");
     } catch (error) {
-      res.status(500).json({
-        error: error,
-      });
+      console.log(error);
     }
 }
 
