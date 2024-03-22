@@ -53,8 +53,12 @@ const User = sequelize.define(
     },
     dob: {
       type: DataTypes.DATEONLY,
-      allowNull: true,
+      allowNull: false,
       default: false,
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

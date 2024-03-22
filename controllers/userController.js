@@ -1,36 +1,44 @@
 import User from "../models/userModel.js";
 import { ValidationError } from "sequelize";
+import { generateSecureToken, sendVerificationEmail } from "../config/configfunctions.js";
 
 // create a User
 export const registerUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
+    const { email, password, dob } = req.body;
     await User.sync();
-    // Validate input data
-    if (!email || !password) {
+  try {    
+    if (!email || !password || !dob) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required.",
+        message: "Please fill All details",
       });
     }
 
+    const hashPass = await hash(password, 10);
+    const newDob = new Date(dob);
+
+    
     // Create the new user
     const newUser = await User.create({
       email,
-      password,
+      password: hashPass,
+      dob: newDob,
     });
+    
+    const verificationToken = generateSecureToken(email);
+
+    await sendVerificationEmail(email, verificationToken, res);
 
     console.log(newUser);
 
     res.status(200).json({
       success: true,
-      message: "Registration successful",
-      data: newUser
+      message:
+        "Registration successful. Please check your email to verify your account.",
+      data: newUser,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      // Handle validation errors
       return res.status(400).json({
         success: false,
         message: "Validation error",
