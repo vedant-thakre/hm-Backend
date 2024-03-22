@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 import Otp from './otpModel.js';
 import Address from './addressModel.js';
 import { sequelize } from '../db/db.js';
@@ -49,12 +49,12 @@ const User = sequelize.define(
     },
     getemail: {
       type: DataTypes.BOOLEAN,
-      default: false,
+      defaultValue: false,
     },
     dob: {
-      type: DataTypes.DATEONLY,
+      type: Sequelize.DATEONLY,
       allowNull: false,
-      default: false,
+      defaultValue: Sequelize.fn("now"),
     },
     isVerified: {
       type: DataTypes.BOOLEAN,

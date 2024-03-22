@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 import nodemailer from "nodemailer";
+import User from "../models/userModel.js";
 
 
 dotenv.config();
@@ -11,22 +12,43 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    pass: process.env.EMAILPASSWORD,
   },
 });
 
 export const generateSecureToken = (email) => {
-  const token = jwt.sign(email, process.env.VERIFICATIOIN_SECRET);
+  const token = jwt.sign(email, process.env.VERIFICATION_SECRET, {
+    expiresIn: "1d",
+  });
   return token;  
 };
 
-export const veriftySecurityToken = (token) => {
+export const veriftySecurityToken = async (req, res) => {
   try {
-    jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
-    return true; 
+    const { token } = req.params;
+
+    const decodedmail = jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
+
+    const findUser = User.findOne({ where: { email: decodedmail } });
+
+    if(!findUser){
+      res.status(400).json({
+        message: "Verification link has been expired",
+      });
+    }
+
+    findUser.isVerified = true;
+    await findUser.save();
+
+    res.status(400).json({
+      message: "Verification Successfull",
+    });
+
   } catch (error) {
-    return false;
-  }  
+    res.status(500).json({
+      error: error,
+    });
+  }
 };
 
 export const sendVerificationEmail = async(email, token) => {

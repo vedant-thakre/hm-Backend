@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
+import pkg from "bcryptjs";
 import { ValidationError } from "sequelize";
+const { hash, compare } = pkg;
 import { generateSecureToken, sendVerificationEmail } from "../config/configfunctions.js";
 
 // create a User
