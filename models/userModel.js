@@ -6,7 +6,6 @@ import { sequelize } from '../db/db.js';
 const User = sequelize.define(
   "User",
   {
-    // Define your user schema here
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
