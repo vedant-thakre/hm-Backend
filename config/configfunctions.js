@@ -31,10 +31,17 @@ export const verifySecurityToken = async (req, res) => {
   try {
     const { token } = req.params;
 
-    const decodedmail = jwt.verify(
-      token,
-      "LeoMessiIsTheGreatestPlayerOfAllTimePeriod"
-    );
+    let decodedmail;
+    try {
+      decodedmail = jwt.verify(
+        token,
+        "LeoMessiIsTheGreatestPlayerOfAllTimePeriod"
+      );
+    } catch (error) {
+      return res.send("Email verification failed please try again");
+    }
+
+    if(!decodedmail) return res.send("Email verification failed please try again");
 
     console.log("decodedmail", decodedmail);
 
@@ -43,7 +50,7 @@ export const verifySecurityToken = async (req, res) => {
     });
 
     if (!findUser) {
-      return res.status(400).json({
+      res.status(400).json({
         message: "Verification link has expired or is invalid",
       });
     }
@@ -52,8 +59,8 @@ export const verifySecurityToken = async (req, res) => {
     findUser.isVerified = true;
     await findUser.save();
 
-    console.log("Verification Successful");
-    res.status(200).json({
+    res.send("You  Email has been verified");
+    return res.status(200).json({
       message: "Verification successful",
     });
   } catch (error) {
@@ -68,10 +75,10 @@ export const verifySecurityToken = async (req, res) => {
 export const sendVerificationEmail = async(email, token) => {
     try {
         await transporter.sendMail({
-        from: `H&M Team`,
-        to: email,
-        subject: "Your H&M Verification Link",
-        html: `<!DOCTYPE html>
+          from: `H&M Team`,
+          to: email,
+          subject: "Your H&M Verification Link",
+          html: `<!DOCTYPE html>
                   <html lang="en">
                   <head>
                     <meta charset="UTF-8">
@@ -139,14 +146,14 @@ export const sendVerificationEmail = async(email, token) => {
                       <h1 class="heading">Welcome to H&M</h1>
                       <p class="content">You're just a click away from unlocking a treasure trove of powerful APIs.</p>
                       <p class="content">Please click the following link to verify your email address:</p>
-                      <a href='http://localhost:8080/verify-email/${token}' class="btn">Verify Email</a>
+                      <a href='http://localhost:8080/api/v1/verify-email/${token}' class="btn">Verify Email</a>
                       <p class="content">Once you verify your account, you may login to view your account status, API usage activity, and account settings.</p>
                       <p class="footer">Best regards,<br> The H&M Team</p>
                     </div>
                   </body>
                   </html>
           `,
-      });
+        });
       console.log("verificatioin email has been sent");
     } catch (error) {
       console.log(error);
