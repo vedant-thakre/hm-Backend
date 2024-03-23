@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import User from "../models/userModel.js";
-
 
 dotenv.config();
 
@@ -17,14 +16,10 @@ const transporter = nodemailer.createTransport({
 });
 
 export const generateSecureToken = (email) => {
-  const token = jwt.sign(
-    { email },
-    "LeoMessiIsTheGreatestPlayerOfAllTimePeriod",
-    {
-      expiresIn: "1d",
-    }
-  );
-  return token;  
+  const token = jwt.sign({ email }, process.env.VERIFICATIOIN_SECRET, {
+    expiresIn: "1d",
+  });
+  return token;
 };
 
 export const verifySecurityToken = async (req, res) => {
@@ -33,17 +28,12 @@ export const verifySecurityToken = async (req, res) => {
 
     let decodedmail;
     try {
-      decodedmail = jwt.verify(
-        token,
-        "LeoMessiIsTheGreatestPlayerOfAllTimePeriod"
-      );
+      decodedmail = jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
     } catch (error) {
-      return res.send("Email verification failed please try again");
+      res.status(500).json({
+        message: "Email verification failed please try again",
+      });
     }
-
-    if(!decodedmail) return res.send("Email verification failed please try again");
-
-    console.log("decodedmail", decodedmail);
 
     const findUser = await User.findOne({
       where: { email: decodedmail.email },
@@ -59,8 +49,8 @@ export const verifySecurityToken = async (req, res) => {
     findUser.isVerified = true;
     await findUser.save();
 
-    res.send("You  Email has been verified");
     return res.status(200).json({
+      success: true,
       message: "Verification successful",
     });
   } catch (error) {
@@ -71,14 +61,13 @@ export const verifySecurityToken = async (req, res) => {
   }
 };
 
-
-export const sendVerificationEmail = async(email, token) => {
-    try {
-        await transporter.sendMail({
-          from: `H&M Team`,
-          to: email,
-          subject: "Your H&M Verification Link",
-          html: `<!DOCTYPE html>
+export const sendVerificationEmail = async (email, token) => {
+  try {
+    await transporter.sendMail({
+      from: `H&M Team`,
+      to: email,
+      subject: "Your H&M Verification Link",
+      html: `<!DOCTYPE html>
                   <html lang="en">
                   <head>
                     <meta charset="UTF-8">
@@ -153,10 +142,9 @@ export const sendVerificationEmail = async(email, token) => {
                   </body>
                   </html>
           `,
-        });
-      console.log("verificatioin email has been sent");
-    } catch (error) {
-      console.log(error);
-    }
-}
-
+    });
+    console.log("verificatioin email has been sent");
+  } catch (error) {
+    console.log("Error" , error);
+  }
+};
