@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import User from "../models/userModel.js";
-import { hash } from "bcryptjs";
 
 dotenv.config();
 
@@ -26,13 +25,6 @@ export const generateSecureToken = (email, id, tokenExpiration) => {
 export const verifySecurityToken = async (req, res) => {
   try {
     const { token } = req.params;
-    const { password, confirm } = req.body;
-
-    if(password !== confirm){
-      res.status(400).json({
-        message: "Password does not match",
-      });
-    }
 
     let decoded;
     try {
@@ -52,7 +44,7 @@ export const verifySecurityToken = async (req, res) => {
         message: "Verification link has expired or is invalid",
       });
     }
-    
+
     // Update isVerified property and save the user
     findUser.isVerified = true;
     await findUser.save();

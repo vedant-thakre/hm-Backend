@@ -254,7 +254,7 @@ export const forgotPasswordEmailLink = async(req, res) => {
         });
       }
 
-      const token = jwt.sign({ email, id }, process.env.VERIFICATIOIN_SECRET, {
+      const token = jwt.sign({ email }, process.env.VERIFICATIOIN_SECRET, {
         expiresIn: "1h",
       });
 
@@ -356,6 +356,13 @@ export const forgotPasswordEmailLink = async(req, res) => {
 export const forgotPasswordVerifyAndChangePassword = async(req, res) => {
   try {
     const { token } = req.params;
+    const { password, confirm } = req.body;
+
+    if (password !== confirm) {
+      res.status(400).json({
+        message: "Password does not match",
+      });
+    }
 
     let decoded;
     try {
