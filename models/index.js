@@ -6,5 +6,5 @@ import User from "./userModel";
 User.hasOne(Otp);
 User.hasMany(Address);
 
-Otp.belongsTo(User);
+Otp.belongsTo(User, { foreignKey: "UserId" });
 Address.belongsTo(User);

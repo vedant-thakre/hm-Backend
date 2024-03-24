@@ -1,7 +1,5 @@
 import { DataTypes } from "sequelize";
-import User from "./userModel.js";
 import { sequelize } from "../db/db.js";
-
 
 const Otp = sequelize.define(
   "Otp",
@@ -10,6 +8,10 @@ const Otp = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     code: {
       type: DataTypes.STRING,
