@@ -59,11 +59,23 @@ const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    hasAccess: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     freezeTableName: true,
   }
 );
+
+// User.sync({})
+//   .then(() => {
+//     console.log("New user model migrated successfully");
+//   })
+//   .catch(() => {
+//     console.log("Error migrating new user model:", error);
+//   });
 
 
 export default User;

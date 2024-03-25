@@ -23,6 +23,7 @@ export const generateSecureToken = (email, id, tokenExpiration) => {
 };
 
 export const verifySecurityToken = async (req, res) => {
+  console.log("Verifying the Security Token using Email");
   try {
     const { token } = req.params;
 
@@ -30,7 +31,7 @@ export const verifySecurityToken = async (req, res) => {
     try {
       decoded = jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
     } catch (error) {
-      res.status(500).json({
+      res.status(400).json({
         message: "Email verification failed please try again",
       });
     }
@@ -373,3 +374,39 @@ export const ResetPasswordEmail = async (email, name, newOtp) => {
     console.log("Error" , error);
   }
 };
+
+export const SuperAdminAccess = async(req, res, next) => {
+  try {
+    const { token } = req.cookies;
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.VERIFICATIOIN_SECRET);
+    } catch (error) {
+      res.status(400).json({
+        message: "Invalid Token",
+      });
+    }
+
+    const user = await User.findOne({
+      where: {
+        email: decoded.email,
+        role: "superadmin",
+      },
+    });
+
+    if(!user){
+       res.status(400).json({
+        success: false,
+        message: "Your not authorize to access this route",
+       });
+    }
+    next();
+
+   } catch (error) {
+     console.log(error);
+     res.status(500).json({
+       message: "Internal server error",
+     });
+  }
+}

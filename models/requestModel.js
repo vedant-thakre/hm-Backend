@@ -10,10 +10,6 @@ const Request = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     status: {
       type: DataTypes.ENUM("pending", "approved", "rejected"),
       defaultValue: "pending",
@@ -23,5 +19,13 @@ const Request = sequelize.define(
     freezeTableName: true,
   }
 );
+
+// Request.sync({})
+//   .then(() => {
+//     console.log("New request model migrated successfully");
+//   })
+//   .catch(() => {
+//     console.log("Error migrating new request model:", error);
+//   })
 
 export default Request;
