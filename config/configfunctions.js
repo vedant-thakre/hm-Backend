@@ -150,7 +150,6 @@ export const sendVerificationEmail = async (email, token) => {
   }
 };
 
-
 export const ResetPasswordEmail = async (email, name, newOtp) => {
   try {
     await transporter.sendMail({
