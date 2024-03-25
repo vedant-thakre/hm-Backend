@@ -9,10 +9,12 @@ import Address from "./models/addressModel.js";
 import User from "./models/userModel.js";
 import Otp from "./models/otpModel.js";
 import cookieParser from "cookie-parser";
+import { createRelations } from "./models/index.js";
 
 dotenv.config;
 export const app = express();
 connectDB();
+createRelations();
 
 // middleware
 app.use(express.json());

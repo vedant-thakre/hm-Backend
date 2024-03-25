@@ -47,8 +47,6 @@ export const registerAdmin = async (req, res) => {
       success: true,
       message:
         "Registration successful. Please check your email to verify your account.",
-      data: newUser,
-      request: newRequest,
     });
   } catch (error) {
     if (error instanceof ValidationError) {

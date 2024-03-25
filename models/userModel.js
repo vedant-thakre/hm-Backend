@@ -1,6 +1,4 @@
-import { DataTypes, Sequelize } from 'sequelize';
-import Otp from './otpModel.js';
-import Address from './addressModel.js';
+import { DataTypes } from 'sequelize';
 import { sequelize } from '../db/db.js';
 
 const User = sequelize.define(
@@ -76,6 +74,7 @@ const User = sequelize.define(
 //   .catch(() => {
 //     console.log("Error migrating new user model:", error);
 //   });
+
 
 
 export default User;
