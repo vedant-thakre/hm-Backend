@@ -95,11 +95,11 @@ export const loginAdmin = async (req, res) => {
       });
     }
 
-    if (!user.isVerified) {
+    if (!user.hasAccess) {
       return res.status(400).json({
         success: false,
         message:
-          "Please verify your email using the link sent on your registered email address before login",
+          "You don't have access the ",
       });
     }
 
