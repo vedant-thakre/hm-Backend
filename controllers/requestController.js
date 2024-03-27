@@ -72,6 +72,7 @@ export const AcceptRequest = async (req, res) => {
     });
   }
 };
+
 export const RejectRequest = async (req, res) => {
   try {
     const { id } = req.params;

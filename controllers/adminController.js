@@ -124,6 +124,18 @@ export const loginAdmin = async (req, res) => {
     });
 
   } catch (error) {
-    
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors.map((err) => err.message),
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 }
